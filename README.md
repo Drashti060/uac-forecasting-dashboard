@@ -25,3 +25,5 @@ Technology Stack
 2. Open the app and use HHS UAC CSV in the sidebar to upload the file.
 3. Review the cleaning output and confirm the date range and values are appropriate before interpreting forecasts.
 Do not commit confidential, restricted, or personally identifiable information to a public repository. Even for a private repository, follow your organization's data-handling requirements.
+
+deploy:-https://uac-forecasting-dashboard-wslvehtxgxinqcixxp6axh.streamlit.app/
