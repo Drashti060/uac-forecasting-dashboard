@@ -20,30 +20,6 @@ Technology Stack
 - LightGBM and XGBoost (optional model backends)
 - Prophet (optional forecasting backend)
 
-Project Structure
-uac_forecasting/
-├── app.py                         # Streamlit dashboard entry point
-├── requirements.txt               # Python dependencies
-├── data/
-│   └── synthetic_uac.csv           # Synthetic demonstration dataset
-├── artifacts/
-│   ├── backtest_predictions.csv   # Walk-forward backtest predictions
-│   └── metrics.csv                # Model evaluation metrics
-├── reports/
-│   └── executive_summary.md       # Example executive report
-├── scripts/
-│   ├── make_synthetic_data.py     # Generate demo data
-│   └── train.py                   # Run model backtests and generate artifacts
-├── src/
-│   ├── config.py                  # Settings and thresholds
-│   ├── data_pipeline.py           # Data loading and cleaning
-│   ├── features.py                # Feature engineering
-│   ├── models.py                  # Forecasting models and evaluation
-│   ├── risk_engine.py              # Capacity risk and bottleneck logic
-│   └── reporting.py                # Report generation
-└── tests/
-    └── test_pipeline.py            # Pipeline and risk-engine tests
-
     Use Real Data
 1. Obtain a CSV dataset that you are authorized to use and that matches the columns expected by the project's data pipeline.
 2. Open the app and use HHS UAC CSV in the sidebar to upload the file.
