@@ -1,36 +1,51 @@
-# UAC Program Predictive Intelligence System
+UAC Program Predictive Intelligence System
+A Streamlit dashboard for exploring Unaccompanied Alien Children (UAC) program capacity forecasts, capacity-breach risk, and sponsor-placement bottlenecks. It combines historical time-series data, forecasting models, uncertainty intervals, and operational risk indicators in one interactive interface.
+Important: The included synthetic dataset and reports are for demonstration only. They are not official HHS data and should not be used to make real-world operational decisions. Use only data you are authorized to access.
 
-Forecasts the HHS "Children in HHS Care" census, quantifies capacity-breach risk and
-flags sponsor-placement bottlenecks.
+Features
+- Forecast & Capacity Risk: Forecast the daily census, view uncertainty bands, and estimate the probability of exceeding a selected capacity threshold.
+- Pipeline & Bottleneck: Explore transfers, discharges, net pressure, and sponsor-placement bottleneck alerts.
+- Model Benchmarks: Review walk-forward backtest predictions and evaluation metrics when artifacts are available.
+- Data & Decomposition: Inspect data cleaning results and time-series decomposition.
+- Interactive controls: Select forecast horizon and model, confidence bands, history window, capacity threshold, and alert settings.
+- CSV input: Upload a compatible HHS UAC CSV through the dashboard sidebar.
+- Synthetic demo mode: Try the dashboard without supplying a real dataset.
+Technology Stack
+- Python
+- Streamlit
+- Pandas and NumPy
+- Plotly
+- Statsmodels / SARIMAX
+- Scikit-learn
+- LightGBM and XGBoost (optional model backends)
+- Prophet (optional forecasting backend)
 
-```
-src/config.py         all tunables (horizons, folds, risk thresholds, staffing ratios)
-src/data_pipeline.py  clean CSV -> complete daily series, gap fill, STL
-src/features.py       lags, rolling stats, net pressure, bottleneck signals, calendar
-src/models.py         benchmarks, SARIMAX, Prophet, LightGBM/XGB, RF, ensemble,
-                      walk-forward CV, interval calibration, metrics
-src/risk_engine.py    Monte-Carlo breach probability, surge lead time, bottleneck alerts
-src/reporting.py      renders reports/executive_summary.md from computed results
-app.py                Streamlit dashboard
-scripts/train.py      backtest + artifacts + report;  scripts/make_synthetic_data.py
-tests/                leakage, cleaning, risk-engine tests
-```
+Project Structure
+uac_forecasting/
+├── app.py                         # Streamlit dashboard entry point
+├── requirements.txt               # Python dependencies
+├── data/
+│   └── synthetic_uac.csv           # Synthetic demonstration dataset
+├── artifacts/
+│   ├── backtest_predictions.csv   # Walk-forward backtest predictions
+│   └── metrics.csv                # Model evaluation metrics
+├── reports/
+│   └── executive_summary.md       # Example executive report
+├── scripts/
+│   ├── make_synthetic_data.py     # Generate demo data
+│   └── train.py                   # Run model backtests and generate artifacts
+├── src/
+│   ├── config.py                  # Settings and thresholds
+│   ├── data_pipeline.py           # Data loading and cleaning
+│   ├── features.py                # Feature engineering
+│   ├── models.py                  # Forecasting models and evaluation
+│   ├── risk_engine.py              # Capacity risk and bottleneck logic
+│   └── reporting.py                # Report generation
+└── tests/
+    └── test_pipeline.py            # Pipeline and risk-engine tests
 
-## Run
-```bash
-pip install -r requirements.txt
-cp /path/to/HHS_Unaccompanied_Alien_Children_Program.csv data/
-python scripts/train.py            # backtest, metrics, calibrated bands, executive report
-streamlit run app.py
-python -m tests.test_pipeline      # or: pytest -q
-```
-`--fast` skips Prophet; `--step`/`--max-folds` control backtest cost; `--causal` forward-fills only.
-
-## Design notes
-* **No leakage:** features use only data <= origin; direct models drop rows whose label lies
-  beyond the origin; interval calibration only uses residuals already observed at the origin.
-* **Direct multi-horizon GBM/RF** predict the census *change* (trees can't extrapolate levels).
-* **Intervals:** SARIMAX/Prophet native; others via expanding residual quantiles.
-* **Risk:** paths are sampled from the forecast quantiles with random-walk dependence.
-* Staffing ratios in `config.py` are illustrative: replace with program standards.
-* `reports/executive_summary.md` as shipped is from SYNTHETIC data; regenerate on real data.
+    Use Real Data
+1. Obtain a CSV dataset that you are authorized to use and that matches the columns expected by the project's data pipeline.
+2. Open the app and use HHS UAC CSV in the sidebar to upload the file.
+3. Review the cleaning output and confirm the date range and values are appropriate before interpreting forecasts.
+Do not commit confidential, restricted, or personally identifiable information to a public repository. Even for a private repository, follow your organization's data-handling requirements.
